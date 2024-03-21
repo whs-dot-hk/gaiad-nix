@@ -4,6 +4,12 @@ with inputs.nixpkgs; let
     then "amd64"
     else "arm64";
 
+  postFixup = ''
+    mkdir -p $out/bin
+    cp $src $out/bin/gaiad
+    chmod +x $out/bin/gaiad
+  '';
+
   gaiad_14_1_0 = stdenv.mkDerivation rec {
     pname = "gaiad";
     version = "14.1.0";
@@ -20,11 +26,7 @@ with inputs.nixpkgs; let
     dontInstall = true;
     dontPatch = true;
     dontPatchELF = true;
-    postFixup = ''
-      mkdir -p $out/bin
-      cp $src $out/bin/gaiad
-      chmod +x $out/bin/gaiad
-    '';
+    inherit postFixup;
   };
   gaiad_15_0_0 = stdenv.mkDerivation rec {
     pname = "gaiad";
@@ -42,13 +44,28 @@ with inputs.nixpkgs; let
     dontInstall = true;
     dontPatch = true;
     dontPatchELF = true;
-    postFixup = ''
-      mkdir -p $out/bin
-      cp $src $out/bin/gaiad
-      chmod +x $out/bin/gaiad
-    '';
+    inherit postFixup;
+  };
+  gaiad_15_1_0 = stdenv.mkDerivation rec {
+    pname = "gaiad";
+    version = "15.1.0";
+    src = fetchurl {
+      url = "https://github.com/cosmos/gaia/releases/download/v${version}/gaiad-v${version}-linux-${arch}";
+      sha256 =
+        if arch == "amd64"
+        then "sha256-vwwI6sXCxeoU6wmDd4FUENXL5SCIjBAy+XC6BADAIyM="
+        else "sha256-6RvREYg8fK2z/o8LCjP9ggpeod62uBLl7fd7IJK+G4I=";
+    };
+    dontUnpack = true;
+    dontBuild = true;
+    dontConfigure = true;
+    dontInstall = true;
+    dontPatch = true;
+    dontPatchELF = true;
+    inherit postFixup;
   };
 in {
   inherit gaiad_14_1_0;
   inherit gaiad_15_0_0;
+  inherit gaiad_15_1_0;
 }
