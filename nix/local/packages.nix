@@ -102,13 +102,13 @@ with inputs.nixpkgs; let
   };
   gaiad_17_0_0 = stdenv.mkDerivation rec {
     pname = "gaiad";
-    version = "16.0.0";
+    version = "17.0.0";
     src = fetchurl {
       url = "https://github.com/cosmos/gaia/releases/download/v${version}/gaiad-v${version}-linux-${arch}";
       sha256 =
         if arch == "amd64"
-        then "sha256-VEDcwo0QHnrXQhBI4zOYkbfueo9XbmY58F8v2+5f7aI="
-        else "sha256-LRkMbKN6RZQK9MbyoNkBt/3CEKWJa3fXKBYMJ1PuE70=";
+        then "sha256-cLeqMjjiyXeVYLoI4xB36cEHpoRfZY8i/D3feuIWoXI="
+        else "sha256-aUAEq6qMYLkMR2l+GskRbfnqSy66KQcMDdn0rn/J1gA=";
     };
     dontUnpack = true;
     dontBuild = true;
