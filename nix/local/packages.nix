@@ -118,6 +118,24 @@ with inputs.nixpkgs; let
     dontPatchELF = true;
     inherit postFixup;
   };
+  gaiad_17_1_0 = stdenv.mkDerivation rec {
+    pname = "gaiad";
+    version = "17.1.0";
+    src = fetchurl {
+      url = "https://github.com/cosmos/gaia/releases/download/v${version}/gaiad-v${version}-linux-${arch}";
+      sha256 =
+        if arch == "amd64"
+        then "sha256-7E6wBONtBKBfymw7Rh2iKveKiHSV63j0YKNHlae7A2I="
+        else "sha256-ko5o+tf5+PHJB0Vj6sGKp56MB3Qa6L1PYPdaJIJllO4=";
+    };
+    dontUnpack = true;
+    dontBuild = true;
+    dontConfigure = true;
+    dontInstall = true;
+    dontPatch = true;
+    dontPatchELF = true;
+    inherit postFixup;
+  };
 in {
   inherit gaiad_14_1_0;
   inherit gaiad_15_0_0;
@@ -125,4 +143,5 @@ in {
   inherit gaiad_15_2_0;
   inherit gaiad_16_0_0;
   inherit gaiad_17_0_0;
+  inherit gaiad_17_1_0;
 }
