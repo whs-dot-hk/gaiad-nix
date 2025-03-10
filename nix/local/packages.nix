@@ -10,6 +10,13 @@ with inputs.nixpkgs; let
     chmod +x $out/bin/gaiad
   '';
 
+  postInstall = ''
+    for f in "$out"/bin/*; do
+      local nrp="$(patchelf --print-rpath "$f" | sed -E 's@(:|^)'$NIX_BUILD_TOP'[^:]*:@\1@g')"
+      patchelf --set-rpath "$nrp" "$f"
+    done
+  '';
+
   gaiad_14_1_0 = stdenv.mkDerivation rec {
     pname = "gaiad";
     version = "14.1.0";
@@ -154,6 +161,27 @@ with inputs.nixpkgs; let
     dontPatchELF = true;
     inherit postFixup;
   };
+  gaiad_21_0_1 = buildGoModule rec {
+    pname = "gaiad";
+    version = "21.0.1";
+    src = fetchurl {
+      url = "https://github.com/cosmos/gaia/archive/refs/tags/v${version}.tar.gz";
+      sha256 = "sha256-Wd4EaAoxR7I9Yx7QChdIg2gQ/ErZKQIzaitvZaVfUEc=";
+    };
+    vendorHash = "sha256-wsgpF2WmvJSL3wFwGyyE0j1OH45eY6/alu+hNy8an6Q=";
+    subPackages = "cmd/gaiad";
+  };
+  gaiad_22_2_0 = buildGoModule rec {
+    pname = "gaiad";
+    version = "22.2.0";
+    src = fetchurl {
+      url = "https://github.com/cosmos/gaia/archive/refs/tags/v${version}.tar.gz";
+      sha256 = "sha256-boND11Z8RHS/Uaab/j1nR8V6aebe0zAs8Z5f/qKQWwU=";
+    };
+    vendorHash = "sha256-JlJmuOVZpnM5wH6onx2zxrCGh6ZhS5761vfceENEdVE=";
+    subPackages = "cmd/gaiad";
+    inherit postInstall;
+  };
 in {
   inherit gaiad_14_1_0;
   inherit gaiad_15_0_0;
@@ -163,4 +191,6 @@ in {
   inherit gaiad_17_0_0;
   inherit gaiad_17_1_0;
   inherit gaiad_17_2_0;
+  inherit gaiad_21_0_1;
+  inherit gaiad_22_2_0;
 }
