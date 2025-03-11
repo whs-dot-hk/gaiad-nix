@@ -170,6 +170,7 @@ with inputs.nixpkgs; let
     };
     vendorHash = "sha256-wsgpF2WmvJSL3wFwGyyE0j1OH45eY6/alu+hNy8an6Q=";
     subPackages = "cmd/gaiad";
+    inherit postInstall;
   };
   gaiad_22_2_0 = buildGoModule rec {
     pname = "gaiad";
