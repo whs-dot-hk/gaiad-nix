@@ -1,60 +1,41 @@
 with inputs.nixpkgs; let
-  arch =
-    if system == "x86_64-linux"
-    then "x86_64"
-    else "aarch64";
-
-  postInstall = ''
-    for f in "$out"/bin/*; do
-      local nrp="$(patchelf --print-rpath "$f" | sed -E 's@(:|^)'$NIX_BUILD_TOP'[^:]*:@\1@g')"
-      patchelf --set-rpath "$nrp" "$f"
-    done
+  postFixup = ''
+    mkdir -p $out/bin
+    cp $src $out/bin/gaiad
+    chmod +x $out/bin/gaiad
   '';
 
-  libwasmvm_2_1_5 = stdenv.mkDerivation rec {
-    pname = "libwasmvm";
-    version = "2.1.5";
-    src = fetchurl {
-      url = "https://github.com/CosmWasm/wasmvm/releases/download/v${version}/libwasmvm.${arch}.so";
-      sha256 =
-        if arch == "x86_64"
-        then "sha256-PAVIA2HfcWGlc6LNcVtnH5o/XCVjPjqty6qi512mNAA="
-        else "sha256-1fE1J9DEtzTjS1WDydqc/6JDCJjyjrhoQfgkKATcbMU=";
-    };
-    dontBuild = true;
-    dontUnpack = true;
-    installPhase = ''
-      mkdir -p $out/lib
-      cp $src $out/lib/libwasmvm.${arch}.so
-    '';
-  };
-
-  gaiad_21_0_1 = buildGoModule rec {
+  gaiad_21_0_1 = stdenv.mkDerivation rec {
     pname = "gaiad";
     version = "21.0.1";
     src = fetchurl {
-      url = "https://github.com/cosmos/gaia/archive/refs/tags/v${version}.tar.gz";
-      sha256 = "sha256-Wd4EaAoxR7I9Yx7QChdIg2gQ/ErZKQIzaitvZaVfUEc=";
+      url = "https://github.com/cosmos/gaia/releases/download/v${version}/gaiad-v${version}-linux-amd64";
+      sha256 = "sha256-7NivZ3poXXs8NAhL2k2uthg12a/B+8qV93g/wnQLBrU=";
     };
-    vendorHash = "sha256-wsgpF2WmvJSL3wFwGyyE0j1OH45eY6/alu+hNy8an6Q=";
-    subPackages = "cmd/gaiad";
-    buildInputs = [libwasmvm_2_1_5];
-    inherit postInstall;
+    dontUnpack = true;
+    dontBuild = true;
+    dontConfigure = true;
+    dontInstall = true;
+    dontPatch = true;
+    dontPatchELF = true;
+    inherit postFixup;
   };
-  gaiad_22_2_0 = buildGoModule rec {
+  gaiad_22_2_0 = stdenv.mkDerivation rec {
     pname = "gaiad";
     version = "22.2.0";
     src = fetchurl {
-      url = "https://github.com/cosmos/gaia/archive/refs/tags/v${version}.tar.gz";
-      sha256 = "sha256-boND11Z8RHS/Uaab/j1nR8V6aebe0zAs8Z5f/qKQWwU=";
+      url = "https://github.com/cosmos/gaia/releases/download/v${version}/gaiad-v${version}-linux-amd64";
+      sha256 = "sha256-SWvct0hRY0hAtzALwatIbidOcI6kx5NwMOw+4jjMCTY=";
     };
-    vendorHash = "sha256-JlJmuOVZpnM5wH6onx2zxrCGh6ZhS5761vfceENEdVE=";
-    subPackages = "cmd/gaiad";
-    buildInputs = [libwasmvm_2_1_5];
-    inherit postInstall;
+    dontUnpack = true;
+    dontBuild = true;
+    dontConfigure = true;
+    dontInstall = true;
+    dontPatch = true;
+    dontPatchELF = true;
+    inherit postFixup;
   };
 in {
-  inherit libwasmvm_2_1_5;
   inherit gaiad_21_0_1;
   inherit gaiad_22_2_0;
 }
