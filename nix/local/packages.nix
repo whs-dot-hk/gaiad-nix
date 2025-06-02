@@ -125,12 +125,12 @@ with inputs.nixpkgs; let
     dontPatchELF = true;
     inherit postFixup;
   };
-  gaiad_23_3_0 = stdenv.mkDerivation rec {
+  gaiad_24_0_0 = stdenv.mkDerivation rec {
     pname = "gaiad";
-    version = "23.3.0";
+    version = "24.0.0";
     src = fetchurl {
       url = "https://github.com/cosmos/gaia/releases/download/v${version}/gaiad-v${version}-linux-amd64";
-      sha256 = "sha256-fGGx0ptodJzw1u9RcLJkpgUPQoFehvL/3BVKTARmEEc=";
+      sha256 = "sha256-nFDtMYjU91Gb+loGuKgxG4rEgOhsu6V3Is1iucO66zo=";
     };
     dontUnpack = true;
     dontBuild = true;
@@ -150,4 +150,5 @@ in {
   inherit gaiad_23_1_1;
   inherit gaiad_23_2_0;
   inherit gaiad_23_3_0;
+  inherit gaiad_24_0_0;
 }
