@@ -305,6 +305,21 @@ with inputs.nixpkgs; let
     dontPatchELF = true;
     inherit postFixup;
   };
+  gaiad_27_5_0 = stdenv.mkDerivation rec {
+    pname = "gaiad";
+    version = "27.5.0";
+    src = fetchurl {
+      url = "https://github.com/cosmos/gaia/releases/download/v${version}/gaiad-v${version}-linux-amd64";
+      sha256 = "sha256-y+Ce3get6yLWq70Oq4ImzSmsKKCVBcENqpvlOmEqJcs=";
+    };
+    dontUnpack = true;
+    dontBuild = true;
+    dontConfigure = true;
+    dontInstall = true;
+    dontPatch = true;
+    dontPatchELF = true;
+    inherit postFixup;
+  };
 in {
   inherit gaiad_21_0_1;
   inherit gaiad_22_0_2;
@@ -326,4 +341,5 @@ in {
   inherit gaiad_27_2_0;
   inherit gaiad_27_3_0;
   inherit gaiad_27_4_0;
+  inherit gaiad_27_5_0;
 }
